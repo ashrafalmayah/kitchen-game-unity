@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
         GamePlaying,
         GameOver
     }
+    
     private State state;
     private float countDownToStartTimer = 1f;
     private float gamePlayingTimer;
