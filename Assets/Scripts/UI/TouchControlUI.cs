@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class TouchControlUI : MonoBehaviour
 {
+    private Player player;
     [SerializeField]private Button pickupDropButton;
     [SerializeField]private Button cuttingButton;
     private BaseCounter selectedCounter;
@@ -17,7 +18,7 @@ public class TouchControlUI : MonoBehaviour
     }
 
     private void Start() {
-        Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+        // Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
         GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
     }
 
@@ -59,17 +60,17 @@ public class TouchControlUI : MonoBehaviour
             UpdateVisual();
             return; 
         }
-        if(Player.Instance.HasKitchenObject()){
+        if(player.HasKitchenObject()){
             if(!selectedCounter.HasKitchenObject()){
                 if(!(selectedCounter is DeliveryCounter || selectedCounter is ContainerCounter || selectedCounter is PlatesCounter)){
                     canPickupDrop = true;
-                }else if(selectedCounter is DeliveryCounter && Player.Instance.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
+                }else if(selectedCounter is DeliveryCounter && player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
                     canPickupDrop = true;
                 }else{
                     canPickupDrop = false;
                 }
             }else{
-                if(Player.Instance.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
+                if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
                     if(selectedCounter.GetKitchenObject().TryGetPlate(out plateKitchenObject)){
                         canPickupDrop = false;
                     }else{
