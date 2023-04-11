@@ -29,9 +29,5 @@ public class TestingNetcodeUI : MonoBehaviour
         gameObject.SetActive(false);
     }
     
-    private void Show(){
-        gameObject.SetActive(true);
-    }
-    
 
 }

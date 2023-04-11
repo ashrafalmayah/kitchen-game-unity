@@ -3248,6 +3248,7 @@ GameObject:
   - component: {fileID: 4794025455589483232}
   - component: {fileID: 4794025455589483234}
   - component: {fileID: 4794025455589483235}
+  - component: {fileID: 360099919748876171}
   m_Layer: 0
   m_Name: RobotVisual
   m_TagString: Untagged
@@ -3306,6 +3307,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 4794025456225368102}
+--- !u!114 &360099919748876171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4794025455589483233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf24bc6064c79c449a232219dce6e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 4794025455589483234}
 --- !u!1 &4794025455688324266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3900,7 +3915,7 @@ GameObject:
   - component: {fileID: 4794025456225368102}
   - component: {fileID: 4794025456225368096}
   - component: {fileID: 4794025456225368099}
-  - component: {fileID: 1733062420859612314}
+  - component: {fileID: -5180602201034360190}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -3972,7 +3987,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &1733062420859612314
+--- !u!114 &-5180602201034360190
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
