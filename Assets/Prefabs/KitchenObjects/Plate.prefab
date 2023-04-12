@@ -165,6 +165,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6344834447312299054}
   - component: {fileID: -2837466027506270576}
+  - component: {fileID: -1761884478548230115}
+  - component: {fileID: 228858883814411499}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Untagged
@@ -202,6 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: d5f72e7b2c6b7a94daa2a6b67395bf57, type: 2}
+  followTransform: {fileID: 0}
   validKitchenObjectSOList:
   - {fileID: 11400000, guid: 49923d7139991cc41a981b68b2bf2bf7, type: 2}
   - {fileID: 11400000, guid: 371812358e61abe4f8cd090dd7fccea9, type: 2}
@@ -209,6 +212,34 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd7760967a40c0c4c9150a7866c3e1f1, type: 2}
   - {fileID: 11400000, guid: 9f248c82bebcd0b45843c99b55e2b2af, type: 2}
   - {fileID: 11400000, guid: 15a3623ad14a7d646b989177e9ac9317, type: 2}
+--- !u!114 &-1761884478548230115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826586313076845592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &228858883814411499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826586313076845592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103c8141f4a5aa24983e2dcf6b716902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3736123494821298299
 GameObject:
   m_ObjectHideFlags: 0
