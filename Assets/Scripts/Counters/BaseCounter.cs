@@ -6,9 +6,11 @@ using UnityEngine;
 public class BaseCounter : MonoBehaviour,IKitchenObjectParent
 {
     public static event EventHandler OnAnyObjectDroped;
+    public static event EventHandler OnAnyPickupOrDrop;
 
     public static void ResetStaticDate(){
         OnAnyObjectDroped = null;
+        OnAnyPickupOrDrop = null;
     }
 
     [SerializeField] private Transform counterTopPoint;
@@ -35,6 +37,7 @@ public class BaseCounter : MonoBehaviour,IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject){
         this.kitchenObject = kitchenObject;
         OnAnyObjectDroped?.Invoke(this , EventArgs.Empty);
+        OnAnyPickupOrDrop?.Invoke(this , EventArgs.Empty);
     }
 
     public void ClearKitchenObject(){

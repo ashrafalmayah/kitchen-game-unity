@@ -8,5 +8,6 @@ public class ResetStaticDateManager : MonoBehaviour
         BaseCounter.ResetStaticDate();
         CuttingCounter.ResetStaticDate();
         TrashCounter.ResetStaticDate();
+        Player.ResetStaticDate();
     }
 }

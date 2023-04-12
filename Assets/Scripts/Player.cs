@@ -6,10 +6,20 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour,IKitchenObjectParent
 {
+    public static Player LocalInstance { get; private set; }
+    public static event EventHandler OnAnyPlayerSpawned;
+    public static event EventHandler OnAnyPickedupObject;
+    public static event EventHandler OnAnyPickupOrDrop;
+    public static void ResetStaticDate(){
+        OnAnyPlayerSpawned = null;
+        OnAnyPickedupObject = null;
+        OnAnyPickupOrDrop = null;
+    }
 
 
     public event EventHandler OnPickedupObject;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+
     public class OnSelectedCounterChangedEventArgs : EventArgs {
         public BaseCounter selectedCounter;
     }
@@ -25,13 +35,17 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
     private Vector3 lastInteractDirection;
 
 
-    private void Awake() {
-
-    }
-
     private void Start() {
         GameInput.Instance.OnInteractAction += GameInput_OnInteractAciton;
         GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAciton;
+    }
+
+
+    public override void OnNetworkSpawn(){
+        if(IsOwner){
+            LocalInstance = this;
+        }
+        OnAnyPlayerSpawned?.Invoke(this , EventArgs.Empty);
     }
 
     private void GameInput_OnInteractAlternateAciton(object sender, EventArgs e){
@@ -151,10 +165,13 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject){
         this.kitchenObject = kitchenObject;
         OnPickedupObject?.Invoke(this , EventArgs.Empty);
+        OnAnyPickedupObject?.Invoke(this , EventArgs.Empty);
+        OnAnyPickupOrDrop?.Invoke(this , EventArgs.Empty);
     }
 
     public void ClearKitchenObject(){
         this.kitchenObject = null;
+        OnAnyPickupOrDrop?.Invoke(this , EventArgs.Empty);
     }
 
     public bool HasKitchenObject(){

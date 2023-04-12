@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public interface IKitchenObjectParent
 {
-    public Transform GetKitchenObjectFollowTransform();
+    static event EventHandler OnAnyPickupOrDrop;
+
+    Transform GetKitchenObjectFollowTransform();
     
-    public KitchenObject GetKitchenObject();
+    KitchenObject GetKitchenObject();
 
-    public void SetKitchenObject(KitchenObject kitchenObject);
+    void SetKitchenObject(KitchenObject kitchenObject);
 
-    public void ClearKitchenObject();
+    void ClearKitchenObject();
 
-    public bool HasKitchenObject();
+    bool HasKitchenObject();
 }

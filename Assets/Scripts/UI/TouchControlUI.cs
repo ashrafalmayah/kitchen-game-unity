@@ -10,19 +10,31 @@ public class TouchControlUI : MonoBehaviour
     [SerializeField]private Button pickupDropButton;
     [SerializeField]private Button cuttingButton;
     private BaseCounter selectedCounter;
-    private bool canPickupDrop = false;
+    private bool canPickupOrDrop = false;
     private bool canCut = false;
 
 
-    private void Awake() {
-    }
 
     private void Start() {
-        // Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
-        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
+        if(Player.LocalInstance != null){
+            Player.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+            player = Player.LocalInstance;
+        }else{
+            Player.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
+        }
+        Player.OnAnyPickupOrDrop += KitchenObjectParent_OnPickupOrDrop;
+        BaseCounter.OnAnyPickupOrDrop += KitchenObjectParent_OnPickupOrDrop;
     }
 
-    private void GameInput_OnInteractAction(object sender, EventArgs e){
+    private void Player_OnAnyPlayerSpawned(object sender, EventArgs e){
+        if(Player.LocalInstance != null){
+            Player.LocalInstance.OnSelectedCounterChanged -= Player_OnSelectedCounterChanged;
+            Player.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+            player = Player.LocalInstance;
+        }
+    }
+
+    private void KitchenObjectParent_OnPickupOrDrop(object sender, EventArgs e){
         CheckCut();
         CheckPickupDrop();
     }
@@ -56,50 +68,50 @@ public class TouchControlUI : MonoBehaviour
 
     private void CheckPickupDrop(){
         if(IsSelectedCounterNull()){
-            canPickupDrop = false;
+            canPickupOrDrop = false;
             UpdateVisual();
-            return; 
+            return;
         }
         if(player.HasKitchenObject()){
             if(!selectedCounter.HasKitchenObject()){
                 if(!(selectedCounter is DeliveryCounter || selectedCounter is ContainerCounter || selectedCounter is PlatesCounter)){
-                    canPickupDrop = true;
+                    canPickupOrDrop = true;
                 }else if(selectedCounter is DeliveryCounter && player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
-                    canPickupDrop = true;
+                    canPickupOrDrop = true;
                 }else{
-                    canPickupDrop = false;
+                    canPickupOrDrop = false;
                 }
             }else{
                 if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)){
                     if(selectedCounter.GetKitchenObject().TryGetPlate(out plateKitchenObject)){
-                        canPickupDrop = false;
+                        canPickupOrDrop = false;
                     }else{
                         if(!( selectedCounter is ContainerCounter || selectedCounter is PlatesCounter )){
-                            canPickupDrop = true;
+                            canPickupOrDrop = true;
                         }else{
-                            canPickupDrop = false;
+                            canPickupOrDrop = false;
                         }
                     }
                 }else{
                     if(selectedCounter.GetKitchenObject().TryGetPlate(out plateKitchenObject)){
-                        canPickupDrop = true;
+                        canPickupOrDrop = true;
                     }else{
-                        canPickupDrop = false;
+                        canPickupOrDrop = false;
                     }
                 }
             }
         }else{
             if(selectedCounter.HasKitchenObject() || selectedCounter is ContainerCounter || selectedCounter is PlatesCounter){
                 //Can pickup
-                canPickupDrop = true;
+                canPickupOrDrop = true;
             }else{
-                canPickupDrop = false;
+                canPickupOrDrop = false;
             }
         }
         UpdateVisual();
     }
     private void UpdateVisual(){
-        if( canPickupDrop ){
+        if( canPickupOrDrop ){
             pickupDropButton.gameObject.SetActive(true);
         }else{
             pickupDropButton.gameObject.SetActive(false);
