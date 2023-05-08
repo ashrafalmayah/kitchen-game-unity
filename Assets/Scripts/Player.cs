@@ -26,6 +26,7 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
     [SerializeField]private float moveSpeed = 7f;
     [SerializeField]private GameInput gameInput;
     [SerializeField]private LayerMask CountersLayer;
+    [SerializeField]private LayerMask CollisionsLayer;
     [SerializeField] private Transform playerObjectHoldPoint;
 
     private KitchenObject kitchenObject;
@@ -107,14 +108,14 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
         float moveDistance = moveSpeed * Time.deltaTime;
         float playerHeight = 1.8f;
         float playerRadius = .7f;
-        bool canMove = !Physics.CapsuleCast(transform.position , transform.position + Vector3.up * playerHeight , playerRadius , moveDirection , moveDistance);
+        bool canMove = !Physics.BoxCast(transform.position , Vector3.one *  playerRadius , moveDirection , Quaternion.identity , moveDistance , CollisionsLayer);
         Vector3 rotationDirection = moveDirection;
         
         if(!canMove){
             //can't move
             //Attempt moving in only X axis
             Vector3 moveDirectionX = new Vector3(moveDirection.x,0,0);
-            canMove = (moveDirection.x > 0.125 || moveDirection.x < -0.125) && !Physics.CapsuleCast(transform.position , transform.position + Vector3.up * playerHeight , playerRadius , moveDirectionX , moveDistance);
+            canMove = (moveDirection.x > 0.125 || moveDirection.x < -0.125) && !Physics.BoxCast(transform.position , Vector3.one *  playerRadius , moveDirectionX , Quaternion.identity , moveDistance , CollisionsLayer);
             if(canMove){
                 moveDirection = moveDirectionX;
             }
@@ -122,7 +123,7 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
                 //Can't move in the X axis
                 //Attempt moving in the only Z axis
                 Vector3 moveDirectionZ = new Vector3(0,0,moveDirection.z);
-                canMove = (moveDirection.z > 0.125 || moveDirection.z < -0.125) && !Physics.CapsuleCast(transform.position , transform.position + Vector3.up * playerHeight , playerRadius , moveDirectionZ , moveDistance);
+                canMove = (moveDirection.z > 0.125 || moveDirection.z < -0.125) && !Physics.BoxCast(transform.position , Vector3.one * playerRadius , moveDirectionZ , Quaternion.identity , moveDistance , CollisionsLayer);
                 if(canMove){
                     moveDirection = moveDirectionZ;
                 }else{

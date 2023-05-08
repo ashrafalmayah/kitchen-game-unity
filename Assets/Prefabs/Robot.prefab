@@ -3916,7 +3916,8 @@ GameObject:
   - component: {fileID: 4794025456225368096}
   - component: {fileID: 4794025456225368099}
   - component: {fileID: -5180602201034360190}
-  m_Layer: 0
+  - component: {fileID: 4145663956301364714}
+  m_Layer: 7
   m_Name: Robot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3958,6 +3959,9 @@ MonoBehaviour:
   CountersLayer:
     serializedVersion: 2
     m_Bits: 64
+  CollisionsLayer:
+    serializedVersion: 2
+    m_Bits: 192
   playerObjectHoldPoint: {fileID: 4794025455855867045}
 --- !u!114 &4794025456225368096
 MonoBehaviour:
@@ -4013,6 +4017,19 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!65 &4145663956301364714
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4794025456225368103}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8, y: 1, z: 0.4}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!1 &4794025456419774989
 GameObject:
   m_ObjectHideFlags: 0
