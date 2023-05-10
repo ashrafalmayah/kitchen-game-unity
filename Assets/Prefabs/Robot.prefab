@@ -3963,6 +3963,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   playerObjectHoldPoint: {fileID: 4794025455855867045}
+  playerPositionList:
+  - {x: 2, y: 0, z: 0}
+  - {x: -2, y: 0, z: 0}
+  - {x: -2, y: 0, z: -2}
+  - {x: 2, y: 0, z: -2}
 --- !u!114 &4794025456225368096
 MonoBehaviour:
   m_ObjectHideFlags: 0

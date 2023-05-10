@@ -20,7 +20,7 @@ public class TutorialUI : MonoBehaviour
 
     private void Start() {
         GameInput.Instance.OnBindingRebound += GameInput_OnBindingReboud;
-        GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged += GameManager_OnLocalPlayerReadyChanged;
         
 
         Show();
@@ -28,14 +28,14 @@ public class TutorialUI : MonoBehaviour
         UpdateVisual();
     }
 
-    private void GameInput_OnBindingReboud(object sender, EventArgs e){
-        UpdateVisual();
-    }
-
-    private void GameManager_OnGameStateChanged(object sender, EventArgs e){
-        if(GameManager.Instance.IsCountDownToStartActive()){
+    private void GameManager_OnLocalPlayerReadyChanged(object sender, EventArgs e){
+        if(GameManager.Instance.IsLocalPlayerREady()){
             Hide();
         }
+    }
+
+    private void GameInput_OnBindingReboud(object sender, EventArgs e){
+        UpdateVisual();
     }
 
     private void UpdateVisual(){

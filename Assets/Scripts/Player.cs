@@ -27,7 +27,8 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
     [SerializeField]private GameInput gameInput;
     [SerializeField]private LayerMask CountersLayer;
     [SerializeField]private LayerMask CollisionsLayer;
-    [SerializeField] private Transform playerObjectHoldPoint;
+    [SerializeField]private Transform playerObjectHoldPoint;
+    [SerializeField]private List<Vector3> playerPositionList;
 
     private KitchenObject kitchenObject;
 
@@ -46,6 +47,10 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
         if(IsOwner){
             LocalInstance = this;
         }
+
+        transform.position = playerPositionList[(int)OwnerClientId];
+
+
         OnAnyPlayerSpawned?.Invoke(this , EventArgs.Empty);
     }
 
