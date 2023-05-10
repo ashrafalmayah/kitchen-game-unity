@@ -68,7 +68,7 @@ public class SettingsUI : MonoBehaviour
     }
 
     private void Start() {
-        GameManager.Instance.OnGameUnPaused += GameManager_OnGameUnPaused;
+        GameManager.Instance.OnLocalGameUnPaused += GameManager_OnGameUnPaused;
 
         UpdateVisual();
 
