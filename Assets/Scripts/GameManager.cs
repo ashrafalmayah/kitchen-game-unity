@@ -31,13 +31,13 @@ public class GameManager : NetworkBehaviour
     private bool isLocalPlayerReady = false;
     private Dictionary<ulong,bool> playerReadyDictionary;
     private Dictionary<ulong,bool> playerPausedDictionary;
-    private Dictionary<ulong,bool> playerUnPausedDictionary;
 
 
     private void Awake() {
         Instance = this;
 
         playerReadyDictionary = new Dictionary<ulong, bool>();
+        playerPausedDictionary = new Dictionary<ulong, bool>();
     }
 
     private void Start() {
@@ -193,7 +193,7 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    public bool IsLocalPlayerREady(){
+    public bool IsLocalPlayerReady(){
         return isLocalPlayerReady;
     }
 }

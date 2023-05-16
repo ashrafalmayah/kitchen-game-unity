@@ -29,7 +29,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     private void GameManager_OnLocalPlayerReadyChanged(object sender, EventArgs e){
-        if(GameManager.Instance.IsLocalPlayerREady()){
+        if(GameManager.Instance.IsLocalPlayerReady()){
             Hide();
         }
     }
