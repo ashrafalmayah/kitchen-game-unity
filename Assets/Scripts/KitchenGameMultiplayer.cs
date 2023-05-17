@@ -14,31 +14,51 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     public event EventHandler OnTryingToConnect;
     public event EventHandler OnFailedToConnect;
+    public event EventHandler OnPlayerDataNetworkListChanged;
 
     [SerializeField]private KitchenObjectListSO kitchenObjectListSO;
+
+    private NetworkList<PlayerData> playerDataNetworkList;
 
     private void Awake() {
         Instance = this;
 
         DontDestroyOnLoad(gameObject);
+
+        playerDataNetworkList = new NetworkList<PlayerData>();
+
+        playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
+    }
+
+    private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent){
+        OnPlayerDataNetworkListChanged?.Invoke(this , EventArgs.Empty);
     }
 
     public void StartHost(){
         NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
+        
+        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
 
         NetworkManager.Singleton.StartHost();
+    }
+
+    private void NetworkManager_OnClientConnectedCallback(ulong clientId){
+        playerDataNetworkList.Add( new PlayerData {
+            clientId = clientId
+        });
+        Debug.Log("Client Id added");
     }
 
     private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse){
         if(SceneManager.GetActiveScene().name != Loader.Scene.CharacterSelectScene.ToString()){
             connectionApprovalResponse.Approved = false;
-            // connectionApprovalResponse.Reason = "Game has already started!";
+            connectionApprovalResponse.Reason = "Game has already started!";
             return;
         }
 
         if(NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_PLAYERS_COUNT){
             connectionApprovalResponse.Approved = false;
-            // connectionApprovalResponse.Reason = "Game is full!";
+            connectionApprovalResponse.Reason = "Game is full!";
             return;
         }
 
@@ -103,6 +123,14 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
 
         kitchenObject.ClearKitchenObjectOnParent();
+    }
+
+    public bool IsPlayerIndexConnected(int playerIndex){
+        return playerIndex < playerDataNetworkList.Count;
+    }
+
+    public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex){
+        return playerDataNetworkList[playerIndex];
     }
 
 }
