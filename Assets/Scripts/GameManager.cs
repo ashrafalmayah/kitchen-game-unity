@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -33,6 +34,8 @@ public class GameManager : NetworkBehaviour
     private Dictionary<ulong,bool> playerPausedDictionary;
     private bool autoTestGamePausedState = false;
 
+    [SerializeField]private Transform playerPrefab;
+
 
     private void Awake() {
         Instance = this;
@@ -53,6 +56,15 @@ public class GameManager : NetworkBehaviour
 
         if(IsServer){
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;   
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += NetworkManager_OnLoadEventCompleted;
+        }
+    }
+
+    private void NetworkManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut){
+        foreach(ulong clientId in NetworkManager.ConnectedClientsIds){
+            Transform spawnedPlayer = Instantiate(playerPrefab);
+
+            spawnedPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId , true);
         }
     }
 

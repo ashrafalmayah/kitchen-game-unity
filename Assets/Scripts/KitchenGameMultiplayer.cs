@@ -3,34 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
     
     public static KitchenGameMultiplayer Instance { get; private set; }
 
+    private const int MAX_PLAYERS_COUNT = 4;
+
+    public event EventHandler OnTryingToConnect;
+    public event EventHandler OnFailedToConnect;
+
     [SerializeField]private KitchenObjectListSO kitchenObjectListSO;
 
     private void Awake() {
         Instance = this;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void StartHost(){
         NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
+
         NetworkManager.Singleton.StartHost();
     }
 
     private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse){
-        if(GameManager.Instance.IsWaitingToStart()){
-            connectionApprovalResponse.Approved = true;
-            connectionApprovalResponse.CreatePlayerObject = true;
-        }else{
+        if(SceneManager.GetActiveScene().name != Loader.Scene.CharacterSelectScene.ToString()){
             connectionApprovalResponse.Approved = false;
+            // connectionApprovalResponse.Reason = "Game has already started!";
+            return;
         }
+
+        if(NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_PLAYERS_COUNT){
+            connectionApprovalResponse.Approved = false;
+            // connectionApprovalResponse.Reason = "Game is full!";
+            return;
+        }
+
+        connectionApprovalResponse.Approved = true;
     }
 
     public void StartClient(){
+        OnTryingToConnect?.Invoke(this , EventArgs.Empty);
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
+    }
+
+    private void NetworkManager_OnClientDisconnectCallback(ulong obj){
+        OnFailedToConnect?.Invoke(this , EventArgs.Empty);
     }
 
     public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent){  
