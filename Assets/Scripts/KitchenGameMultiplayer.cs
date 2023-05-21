@@ -38,8 +38,17 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
         
         NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
 
         NetworkManager.Singleton.StartHost();
+    }
+
+    private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId){
+        for(int i = 0 ; i<playerDataNetworkList.Count; i++){
+            if(playerDataNetworkList[i].clientId == clientId){
+                playerDataNetworkList.RemoveAt(i);
+            }
+        }
     }
 
     private void NetworkManager_OnClientConnectedCallback(ulong clientId){
@@ -68,11 +77,11 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     public void StartClient(){
         OnTryingToConnect?.Invoke(this , EventArgs.Empty);
 
-        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Client_OnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
     }
 
-    private void NetworkManager_OnClientDisconnectCallback(ulong obj){
+    private void NetworkManager_Client_OnClientDisconnectCallback(ulong obj){
         OnFailedToConnect?.Invoke(this , EventArgs.Empty);
     }
 
@@ -131,6 +140,20 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex){
         return playerDataNetworkList[playerIndex];
+    }
+
+    public int GetPlayerDataIndexFromClientId(ulong clientId){
+        for(int i = 0; i<playerDataNetworkList.Count ; i++){
+            if(playerDataNetworkList[i].clientId == clientId){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void KickPlayer(ulong clientId){
+        NetworkManager.Singleton.DisconnectClient(clientId);
+        NetworkManager_Server_OnClientDisconnectCallback(clientId);
     }
 
 }

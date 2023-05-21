@@ -12,7 +12,7 @@ public class HostDisconnectUI : MonoBehaviour
     private void Awake() {
         restartButton.onClick.AddListener(() => {
             NetworkManager.Singleton.Shutdown();
-            Loader.Load(Loader.Scene.GameScene);
+            Loader.Load(Loader.Scene.MainMenuScene);
         });
     }
 
@@ -34,6 +34,13 @@ public class HostDisconnectUI : MonoBehaviour
     
     private void Hide(){
         gameObject.SetActive(false);
+    }
+
+    private void OnDestroy() {
+        if(NetworkManager.Singleton == null){
+            return;
+        }
+        NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
     }
     
 }
