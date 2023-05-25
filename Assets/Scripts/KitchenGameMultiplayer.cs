@@ -10,7 +10,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     
     public static KitchenGameMultiplayer Instance { get; private set; }
 
-    private const int MAX_PLAYERS_COUNT = 4;
+    public const int MAX_PLAYERS_COUNT = 4;
 
     public event EventHandler OnTryingToConnect;
     public event EventHandler OnFailedToConnect;
@@ -55,7 +55,6 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         playerDataNetworkList.Add( new PlayerData {
             clientId = clientId
         });
-        Debug.Log("Client Id added");
     }
 
     private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse){
