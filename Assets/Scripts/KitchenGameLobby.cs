@@ -16,9 +16,14 @@ public class KitchenGameLobby : MonoBehaviour
     public event EventHandler OnJoinLobbyStarted;
     public event EventHandler OnJoinLobbyFailed;
     public event EventHandler OnQuickJoinLobbyFailed;
+    public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
+    public class OnLobbyListChangedEventArgs : EventArgs {
+        public List<Lobby> lobbyList;
+    }
 
     private Lobby joinedLobby;
     private float heartBeatTimer = 15f;
+    private float listLobbiesTimer;
 
     private void Awake() {
         Instance = this;
@@ -31,6 +36,19 @@ public class KitchenGameLobby : MonoBehaviour
 
     private void Update() {
         HandleHeartBeat();
+        HandlePeriodicListLobbies();
+    }
+
+    private void HandlePeriodicListLobbies(){
+        if(joinedLobby == null && AuthenticationService.Instance.IsSignedIn){
+            listLobbiesTimer -= Time.deltaTime;
+            if(listLobbiesTimer < 0){
+                float listLobbiesTimerMax = 3f;
+                listLobbiesTimer = listLobbiesTimerMax;
+
+                ListLobbies();
+            }
+        }
     }
 
     private void HandleHeartBeat(){
@@ -88,6 +106,18 @@ public class KitchenGameLobby : MonoBehaviour
         }
     }
 
+    public async void JoinWithId(string lobbyId){
+        OnJoinLobbyStarted?.Invoke(this , EventArgs.Empty);
+        try{
+            joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+
+            KitchenGameMultiplayer.Instance.StartClient();
+        }catch(LobbyServiceException e) {
+            Debug.Log(e);
+            OnJoinLobbyFailed?.Invoke(this , EventArgs.Empty);
+        }
+    }
+
     public async void JoinWithCode(string lobbyCode){
         OnJoinLobbyStarted?.Invoke(this , EventArgs.Empty);
         try{
@@ -131,6 +161,22 @@ public class KitchenGameLobby : MonoBehaviour
             }catch(LobbyServiceException e){
                 Debug.Log(e);
             }
+        }
+    }
+
+    private async void ListLobbies(){
+        try{
+            QueryLobbiesOptions queryLobbiesOptions = new QueryLobbiesOptions {
+                Filters = new List<QueryFilter> {
+                new QueryFilter(QueryFilter.FieldOptions.AvailableSlots , "0" , QueryFilter.OpOptions.GT)
+                }
+            };
+            QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
+            OnLobbyListChanged?.Invoke(this , new OnLobbyListChangedEventArgs {
+                lobbyList = queryResponse.Results
+            });
+        } catch(LobbyServiceException e){
+            Debug.Log(e);
         }
     }
 
