@@ -31,7 +31,7 @@ public class KitchenGameLobby : MonoBehaviour
 
     private Lobby joinedLobby;
     private float heartBeatTimer = 15f;
-    private float listLobbiesTimer;
+    private float listLobbiesTimer = 1f;
 
     private void Awake() {
         Instance = this;
@@ -80,7 +80,7 @@ public class KitchenGameLobby : MonoBehaviour
     private async void InitializeUnityAuthentication(){
         if(UnityServices.State != ServicesInitializationState.Initialized){
             InitializationOptions initializationOptions = new InitializationOptions();
-            initializationOptions.SetProfile(UnityEngine.Random.Range(0,1000).ToString());
+            // initializationOptions.SetProfile(UnityEngine.Random.Range(0,1000).ToString());
 
             await UnityServices.InitializeAsync(initializationOptions);
 
