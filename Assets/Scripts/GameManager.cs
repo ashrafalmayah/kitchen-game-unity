@@ -65,6 +65,7 @@ public class GameManager : NetworkBehaviour
             Transform spawnedPlayer = Instantiate(playerPrefab);
 
             spawnedPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId , true);
+            spawnedPlayer.GetComponent<Player>().SetPlayerName(clientId);
         }
     }
 

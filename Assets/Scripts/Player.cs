@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
 public class Player : NetworkBehaviour,IKitchenObjectParent
 {
@@ -29,6 +30,7 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
     [SerializeField]private LayerMask CollisionsLayer;
     [SerializeField]private Transform playerObjectHoldPoint;
     [SerializeField]private List<Vector3> playerPositionList;
+    [SerializeField]private TextMeshPro playerNameText;
 
     private KitchenObject kitchenObject;
 
@@ -195,5 +197,11 @@ public class Player : NetworkBehaviour,IKitchenObjectParent
 
     public NetworkObject GetNetworkObject(){
         return NetworkObject;
+    }
+
+    public void SetPlayerName(ulong clientId){
+        int playerIndex = KitchenGameMultiplayer.Instance.GetPlayerDataIndexFromClientId(clientId);
+        PlayerData playerData = KitchenGameMultiplayer.Instance.GetPlayerDataFromPlayerIndex(playerIndex);
+        playerNameText.text = playerData.playerName.ToString();
     }
 }
